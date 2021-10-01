@@ -1213,6 +1213,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -1227,6 +1228,19 @@ void StartDefaultTask(void *argument)
   /* init code for LWIP */
   MX_LWIP_Init();
   /* USER CODE BEGIN 5 */
+
+  void reverse(char s[])
+  {
+      int length = strlen(s) ;
+      int c, i, j;
+
+      for (i = 0, j = length - 1; i < j; i++, j--)
+      {
+          c = s[i];
+          s[i] = s[j];
+          s[j] = c;
+      }
+  }
 
   const unsigned SERVER_PORT = 5000;
   struct sockaddr_in server_address;
@@ -1248,7 +1262,6 @@ void StartDefaultTask(void *argument)
     return;
   }
 
-
   struct sockaddr_in client_address;
   socklen_t client_address_len = 0;
 
@@ -1265,9 +1278,20 @@ void StartDefaultTask(void *argument)
 		 &client_address_len);
     buffer[len] = '\0';
 
+    // Get the first line
+    ptr = strchr(buffer, '\n');
+    if (ptr) *ptr = '\0';
+
+    // Reverse the string
+    reverse(buffer);
+
+    // Append new line
+    strcat(buffer, "\n");
+    len = strlen(buffer);
+
     printf("\n\r received: '%s' %d from client %s\n", buffer, len,
     	       inet_ntoa(client_address.sin_addr));
-    // echo
+    // Echo back
     sendto(sock, buffer, len, 0, (struct sockaddr *)&client_address,
 	       sizeof(client_address));
 

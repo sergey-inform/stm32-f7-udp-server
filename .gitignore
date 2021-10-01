@@ -1,0 +1,12 @@
+*.launch
+*.ld
+Debug/
+
+
+*.bin
+*.elf
+*.ld
+*.o
+
+# hidden files
+.*
